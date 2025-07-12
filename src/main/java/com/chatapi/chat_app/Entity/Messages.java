@@ -1,12 +1,7 @@
 package com.chatapi.chat_app.Entity;
 
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*; // Make sure to import these
 import lombok.Data;
 
 @Entity
@@ -16,9 +11,18 @@ public class Messages {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long messageId;
-	private Conversations conversationId;
-	private User senderId;
-	private String conten;
+
+	// FIX 1: Corrected mapping to Conversations entity
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "conversation_id")
+	private Conversations conversation;
+
+	// FIX 2: Corrected mapping to User entity
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sender_id") // Assumes foreign key column is "sender_id"
+	private User sender;
+
+	private String content;
 	private String messageType;
 	private String fileUrl;
 	private Integer fileSize;
@@ -28,5 +32,4 @@ public class Messages {
 	private LocalDateTime sendAt;
 	private LocalDateTime deliveredAt;
 	private LocalDateTime readAt;
-	
 }
