@@ -3,13 +3,22 @@ package com.chatapi.chat_app.Entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "users")
@@ -17,13 +26,11 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(exclude = {"conversationParticipants", "messages", "createdConversations"}) // Avoid circular references
 public class User {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id") // Match your SQL column name
-    @EqualsAndHashCode.Include
+    @EqualsAndHashCode.Include 
     private Long userId;
     
     @Column(name = "username", nullable = false, length = 100, unique = true)
@@ -57,7 +64,6 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
     
-    // Bidirectional relationships (optional)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ConversationParticipants> conversationParticipants;
     
@@ -67,19 +73,17 @@ public class User {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Conversations> createdConversations;
     
-    // Custom constructors
-    public User(String username, String email, String firstName, String lastName) {
-        this.username = username;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private List<Contacts> contacts;
     
-    // Utility methods
+    @OneToMany(mappedBy = "contactUser", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private List<Contacts> contactedBy; 
+    
+    // Utility methods    
     public String getFullName() {
         return firstName + " " + lastName;
     }
-    
+     
     public boolean isTokenExpired() {
         return tokenExpiresAt != null && tokenExpiresAt.isBefore(LocalDateTime.now());
     }

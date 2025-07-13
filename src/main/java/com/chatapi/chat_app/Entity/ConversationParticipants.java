@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(exclude = {"conversation", "user"}) // Prevent lazy loading issues
+@ToString(exclude = {"conversation", "user"}) // Prevent lazy loading issues 
 public class ConversationParticipants {
     
     @Id
@@ -45,18 +45,6 @@ public class ConversationParticipants {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
-    // Custom constructors
-    public ConversationParticipants(Conversations conversation, User user) {
-        this.conversation = conversation;
-        this.user = user;
-        this.role = "member";
-        this.isActive = true;
-    }
-
-    public ConversationParticipants(Conversations conversation, User user, String role) {
-        this(conversation, user);
-        this.role = role;
-    }
 
     // Utility methods
     public void leave() {

@@ -2,14 +2,25 @@ package com.chatapi.chat_app.Entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "conversations")
@@ -17,7 +28,6 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(exclude = {"participants", "messages", "creator"}) // Avoid circular references
 public class Conversations {
     
     @Id
@@ -35,7 +45,6 @@ public class Conversations {
     @Column(name = "created_by")
     private Long createdBy;
     
-    // Optional: Many-to-One relationship to User who created the conversation
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", insertable = false, updatable = false)
     private User creator;
@@ -51,24 +60,11 @@ public class Conversations {
     @Column(name = "is_archived", nullable = false)
     private Boolean isArchived = false;
     
-    // Bidirectional relationships (optional)
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ConversationParticipants> participants;
     
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Messages> messages;
-    
-    // Custom constructors
-    public Conversations(String conversationType, String title, Long createdBy) {
-        this.conversationType = conversationType;
-        this.title = title;
-        this.createdBy = createdBy;
-        this.isArchived = false;
-    }
-    
-    public Conversations(String conversationType, Long createdBy) {
-        this(conversationType, null, createdBy);
-    }
     
     // Utility methods
     public boolean isDirect() {
