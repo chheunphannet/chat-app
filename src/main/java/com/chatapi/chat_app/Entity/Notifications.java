@@ -1,10 +1,15 @@
 package com.chatapi.chat_app.Entity;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -21,7 +26,32 @@ public class Notifications {
 	private Long notificationId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private User user;
+	@JoinColumn(name = "user_id")
+	private User userNotifications;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "related_user_id")
+	private User userRelated;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "conversation_id")
+	private Conversations conversations;
+	
+	@Column(name = "title")
+	private String title;
+	
+	@Column(name = "content")
+	private String content;
+	
+	@Column(name = "notification_type", nullable = false, length = 50)
+	private String notificationType; 
+	
+	@Column(name = "send_at")
+	private LocalDateTime sendAt;
+	
+	@Column(name = "read_at")
+	private LocalDateTime readAt;
+	
 //		notification_id     LONG PRIMARY KEY,
 //	    user_id            LONG NOT NULL,
 //	    

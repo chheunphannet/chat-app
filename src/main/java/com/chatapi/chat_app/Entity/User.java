@@ -79,7 +79,12 @@ public class User {
     @OneToMany(mappedBy = "contactUser", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Contacts> contactedBy; 
     
-    // Utility methods    
+    @OneToMany(mappedBy = "userNotifications", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notifications> notifications;
+    
+    @OneToMany(mappedBy = "userRelated", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notifications> notificationsRelated;
+    // Utility methods     
     public String getFullName() {
         return firstName + " " + lastName;
     }
