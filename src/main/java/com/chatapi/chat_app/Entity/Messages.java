@@ -23,11 +23,11 @@ public class Messages {
 	@JoinColumn(name = "sender_id") // Assumes foreign key column is "sender_id"
 	private User sender;
 	
-	@Column(name = "content")
+	@Column(name = "content", columnDefinition = "TEXT")
 	private String content;
 	
 	@Column(name = "message_type")
-	private String messageType = "text";
+	private String messageType;
 	
 	@Column(name = "file_url")
 	private String fileUrl;
@@ -42,7 +42,7 @@ public class Messages {
 	private String status = "sent";
 	
 	@Column(name = "is_deleted")
-	private Boolean isDeleted;
+	private Boolean isDeleted = false;
 	
 	@CreationTimestamp
 	@Column(name = "send_at")

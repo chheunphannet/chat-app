@@ -45,7 +45,7 @@ public class User {
     @Column(name = "last_name", length = 15)
     private String lastName;
     
-    @Column(name = "profile_picture_url")
+    @Column(name = "profile_picture_url", columnDefinition = "TEXT")
     private String profilePictureUrl;
     
     @Column(name = "birthday")
@@ -76,15 +76,15 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Contacts> contacts;
     
-    @OneToMany(mappedBy = "contactUser", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Contacts> contactedBy; 
     
-    @OneToMany(mappedBy = "userNotifications", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Notifications> notifications;
     
-    @OneToMany(mappedBy = "userRelated", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Notifications> notificationsRelated;
-    // Utility methods     
+    @OneToMany(mappedBy = "relatedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notifications> triggeredNotifications;
+    
     public String getFullName() {
         return firstName + " " + lastName;
     }

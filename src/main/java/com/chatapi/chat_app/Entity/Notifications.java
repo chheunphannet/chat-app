@@ -2,7 +2,6 @@ package com.chatapi.chat_app.Entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,46 +26,33 @@ public class Notifications {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private User userNotifications;
+	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "related_user_id")
-	private User userRelated;
+	private User relatedUser;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "conversation_id")
-	private Conversations conversations;
+	private Conversations conversation;
 	
 	@Column(name = "title")
 	private String title;
 	
-	@Column(name = "content")
+	@Column(name = "content", columnDefinition = "TEXT")
 	private String content;
 	
 	@Column(name = "notification_type", nullable = false, length = 50)
 	private String notificationType; 
 	
-	@Column(name = "send_at")
-	private LocalDateTime sendAt;
+	@Column(name = "sent_at")
+	private LocalDateTime sentAt;
 	
 	@Column(name = "read_at")
 	private LocalDateTime readAt;
 	
-//		notification_id     LONG PRIMARY KEY,
-//	    user_id            LONG NOT NULL,
-//	    
-//	    -- Notification Content
-//	    title              VARCHAR(255),
-//	    content            TEXT,
-//	    notification_type  VARCHAR(50) NOT NULL,
-//		conversation_id    LONG,                   -- Related conversation (if any)
-//		sent_at            TIMESTAMP,
-//		read_at            TIMESTAMP,
-//	    expires_at         TIMESTAMP,
-//		related_user_id    LONG,
-//		
-//		FOREIGN KEY (user_id) REFERENCES users(user_id),
-//	    FOREIGN KEY (related_user_id) REFERENCES users(user_id),	 -- Who triggered this notification
-//	    FOREIGN KEY (conversation_id) REFERENCES conversations(conversation_id)
+	@Column(name = "expires_at")  
+    private LocalDateTime expiresAt;
+	
 	
 }

@@ -66,6 +66,9 @@ public class Conversations {
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Messages> messages;
     
+    @OneToMany(mappedBy = "conversation", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Notifications> notifications;
+    
     // Utility methods
     public boolean isDirect() {
         return "direct".equals(this.conversationType);
