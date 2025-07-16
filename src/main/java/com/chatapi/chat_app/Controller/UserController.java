@@ -20,12 +20,9 @@ public class UserController {
 	private UserService userService;
 	
 	@GetMapping("/")
-	public ResponseEntity<?> userLogin(@AuthenticationPrincipal OAuth2User auth2User,
-				@RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient client) {
+	public ResponseEntity<?> userLogin(@AuthenticationPrincipal OAuth2User auth2User) {
 		
-		userService.register(auth2User.getAttributes(), client);
-		
-		return ResponseEntity.ok("hello " + (String) auth2User.getAttributes().get("given_name"));
+		return ResponseEntity.ok(auth2User.getAttributes());
 	}
 	
 	

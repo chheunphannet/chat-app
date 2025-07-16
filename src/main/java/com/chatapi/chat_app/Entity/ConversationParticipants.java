@@ -59,4 +59,5 @@ public class ConversationParticipants {
     public boolean isMember() {
         return "member".equals(this.role);
     }
+    
 }

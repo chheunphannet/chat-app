@@ -57,8 +57,13 @@ public class User {
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
     
-    @Column(name = "permissions")
-    private String permissions;
+    @Column(name = "role")
+    private String role;
+    
+    @Column(name = "password")
+    private String password;
+    
+    private String providerId;
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
