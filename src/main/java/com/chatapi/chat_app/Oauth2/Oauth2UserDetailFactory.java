@@ -5,6 +5,8 @@ import com.chatapi.chat_app.Exception.BaseException;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+
 public class Oauth2UserDetailFactory {
 	public static Oauth2UserDetail getOauth2UserDetail(String registrationId, Map<String, Object> attributes) {
 		if (registrationId.equals(Provider.facebook.name())) {
@@ -14,7 +16,7 @@ public class Oauth2UserDetailFactory {
 		} else if (registrationId.equals(Provider.github.name())) {
 			return new GithubOauth2User(attributes);
 		} else {
-			throw new BaseException("400", "sorry! loing with r" + registrationId + " not support");
+			throw new BaseException(HttpStatus.NOT_FOUND, "sorry! loing with r" + registrationId + " not support");
 		}
 	}
 }

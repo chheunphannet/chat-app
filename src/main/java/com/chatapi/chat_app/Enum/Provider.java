@@ -1,5 +1,5 @@
 package com.chatapi.chat_app.Enum;
 
 public enum Provider {
-	google, facebook, github
+	google, facebook, github,local
 }
