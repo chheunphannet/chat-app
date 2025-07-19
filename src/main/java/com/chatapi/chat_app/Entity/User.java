@@ -57,7 +57,7 @@ public class User {
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
     
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<com.chatapi.chat_app.Entity.Role> roles;
     
     @Column(name = "password")

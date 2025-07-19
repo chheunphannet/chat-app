@@ -1,7 +1,6 @@
 package com.chatapi.chat_app.MapperImpl;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,11 @@ import com.chatapi.chat_app.Enum.Provider;
 public class UserMapperImpl {
 	
 	public User dtoToUser(UserDto dto) {
-		User user = User.builder()
+		if(dto == null) {
+			return null;
+		}
+		
+		return User.builder()
 				.firstName(dto.getFirstName())
 				.lastName(dto.getLastName())
 				.accessToken(null)
@@ -23,9 +26,6 @@ public class UserMapperImpl {
 				.birthday(dto.getBirthday())
 				.password(dto.getPassword())
 				.providerId(Provider.local.name())
-				.roles(Set.of())
 				.build();
-		
-		return null;
 	}
 }

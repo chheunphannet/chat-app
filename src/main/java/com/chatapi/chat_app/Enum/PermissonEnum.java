@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum Permisson {
+public enum PermissonEnum {
 	
 	block_users("block:users"),
 	send_messages("send:messages"),
