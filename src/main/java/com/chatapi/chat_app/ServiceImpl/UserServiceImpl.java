@@ -3,7 +3,9 @@ package com.chatapi.chat_app.ServiceImpl;
 import static com.chatapi.chat_app.Enum.RoleEnum.USER;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ import com.chatapi.chat_app.Enum.PermissonEnum;
 import com.chatapi.chat_app.Exception.BaseException;
 import com.chatapi.chat_app.MapperImpl.UserMapperImpl;
 import com.chatapi.chat_app.Service.UserService;
+import com.chatapi.chat_app.repository.PermissionRepository;
+import com.chatapi.chat_app.repository.RoleRepository;
 import com.chatapi.chat_app.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +31,11 @@ public class UserServiceImpl implements UserService{
 	private UserRepository userRepository;
 	@Autowired 
 	private UserMapperImpl userMapper; 
+	@Autowired
+	private RoleRepository roleRepo;
 	
 	@Override
 	public User register(UserDto dto) {
-		log.info(loadUserByUserName(dto.getUserName()).toString());
 		if(loadUserByUserName(dto.getUserName()) == null) {
 			User user = new User();
 			user = userMapper.dtoToUser(dto);
@@ -47,21 +52,32 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	private Role setRole() {
-		Set<Permission> permissions = new HashSet<>();
 		Set<String> decription = new HashSet<>();
-		
+		Set<Permission> permissions = new HashSet<>();
+		 
 		for(PermissonEnum p : USER.getPermission()) {
 			decription.add(p.getDecription());
 		}
 		
+		
 		for(String d : decription) {
-			permissions.add(Permission.builder().name(d).build());
+			permissions.add(Permission.
+					builder()
+					.name(d)
+					.build());
 		}
 		
-		return Role.builder()
-				.name(USER.name())
-				.permissions(permissions)
-				.build(); 
+		
+		Role role = roleRepo.findByName(USER.name());
+		
+		if(Objects.isNull(role)) {
+			role = Role.builder()
+			.name(USER.name())
+			.permissions(permissions)
+			.build(); 
+		}
+		
+		return role;
 	}
 	
 //	private LocalDateTime toLocaDateTime(Instant exp) { 
