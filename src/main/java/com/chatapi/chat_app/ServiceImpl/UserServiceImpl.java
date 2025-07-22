@@ -5,7 +5,6 @@ import static com.chatapi.chat_app.Enum.RoleEnum.USER;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +15,10 @@ import com.chatapi.chat_app.Entity.Permission;
 import com.chatapi.chat_app.Entity.Role;
 import com.chatapi.chat_app.Entity.User;
 import com.chatapi.chat_app.Enum.PermissonEnum;
+import com.chatapi.chat_app.Enum.RoleEnum;
 import com.chatapi.chat_app.Exception.BaseException;
 import com.chatapi.chat_app.MapperImpl.UserMapperImpl;
 import com.chatapi.chat_app.Service.UserService;
-import com.chatapi.chat_app.repository.PermissionRepository;
 import com.chatapi.chat_app.repository.RoleRepository;
 import com.chatapi.chat_app.repository.UserRepository;
 
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService{
 		if(loadUserByUserName(dto.getUserName()) == null) {
 			User user = new User();
 			user = userMapper.dtoToUser(dto);
-			user.setRoles(Set.of(setRole()));
+			user.setRoles(Set.of(setRole(USER)));
 			return userRepository.save(user);
 		}else {
 			throw new BaseException(HttpStatus.BAD_REQUEST, "this " + dto.getUserName() + " is already exit");
@@ -51,11 +50,11 @@ public class UserServiceImpl implements UserService{
 		return userRepository.findByEmail(usernameOrEmail).orElse(null);
 	}
 	
-	private Role setRole() {
+	private Role setRole(RoleEnum typeRole) {
 		Set<String> decription = new HashSet<>();
 		Set<Permission> permissions = new HashSet<>();
 		 
-		for(PermissonEnum p : USER.getPermission()) {
+		for(PermissonEnum p : typeRole.getPermission()) {
 			decription.add(p.getDecription());
 		}
 		
@@ -68,11 +67,11 @@ public class UserServiceImpl implements UserService{
 		}
 		
 		
-		Role role = roleRepo.findByName(USER.name());
+		Role role = roleRepo.findByName(typeRole.name());
 		
 		if(Objects.isNull(role)) {
 			role = Role.builder()
-			.name(USER.name())
+			.name(typeRole.name())
 			.permissions(permissions)
 			.build(); 
 		}

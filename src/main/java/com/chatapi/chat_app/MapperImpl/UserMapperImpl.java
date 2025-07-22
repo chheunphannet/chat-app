@@ -2,6 +2,8 @@ package com.chatapi.chat_app.MapperImpl;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chatapi.chat_app.Dto.UserDto;
@@ -10,6 +12,9 @@ import com.chatapi.chat_app.Enum.Provider;
 
 @Service
 public class UserMapperImpl {
+	
+	@Autowired
+	private PasswordEncoder PsEncoder;
 	
 	public User dtoToUser(UserDto dto) {
 		if(dto == null) {
@@ -24,7 +29,7 @@ public class UserMapperImpl {
 				.profilePictureUrl(null)
 				.createdAt(LocalDateTime.now())
 				.birthday(dto.getBirthday())
-				.password(dto.getPassword())
+				.password(PsEncoder.encode(dto.getPassword()))
 				.providerId(Provider.local.name())
 				.build();
 	}
